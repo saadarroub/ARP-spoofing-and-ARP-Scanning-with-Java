@@ -57,6 +57,8 @@ public class ARPSpoofingDetector {
         for (Map.Entry<String, Set<String>> entry : ipToMacs.entrySet()) {
             // Check if the IP address has more than one MAC address
             if (entry.getValue().size() > 1) {
+                
+                // Diese Überschrift soll nur einmal ganz am Anfang erscheinen 
                 if (suspiciousCount == 0) {
                     System.out.println("Suspicious IP address found:");
                 }

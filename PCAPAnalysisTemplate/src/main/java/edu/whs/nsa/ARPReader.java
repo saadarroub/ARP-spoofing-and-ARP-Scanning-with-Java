@@ -2,16 +2,13 @@ package edu.whs.nsa;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.concurrent.TimeoutException;
 
 import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PcapHandle;
 import org.pcap4j.core.PcapNativeException;
 import org.pcap4j.core.PcapNetworkInterface;
-import org.pcap4j.core.Pcaps;
 import org.pcap4j.packet.ArpPacket;
 import org.pcap4j.packet.Packet;
 
@@ -36,34 +33,13 @@ public class ARPReader {
         System.setProperty("org.pcap4j.core.packetLibName", "C:\\Windows\\System32\\Npcap\\Packet.dll");
 
             /**
-             * Find all available network interfaces on the system
-             * Returns null or empty list if no devices found
+             * Find all available network interfaces on the system 
+             * by using the NetworkInterfaceSelector class
              */
-            List<PcapNetworkInterface> devices = Pcaps.findAllDevs();
-            if (devices == null || devices.isEmpty()) {
-                System.err.println("No network devices found.");
+            PcapNetworkInterface selectedNif = NetworkInterfaceSelector.selectNetworkInterface();
+            if (selectedNif == null) {
                 return;
             }
-
-        // Display available devices
-        System.out.println("Available network devices:");
-        for (int i = 1; i < devices.size(); i++) {
-            PcapNetworkInterface nif = devices.get(i);
-            System.out.println(i + ": " + nif.getDescription()
-                    + "\n    with name: " + nif.getName()
-                    + "\n    with IP: " + nif.getAddresses());
-        }
-
-            // User selects interface
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("\nEnter the index of the network interface to use: ");
-            int selectedIndex = scanner.nextInt();
-            if (selectedIndex < 0 || selectedIndex >= devices.size()) {
-                System.err.println("Invalid index.");
-                return;
-            }
-            
-            PcapNetworkInterface selectedNif = devices.get(selectedIndex);
 
             /**
              * Opens network interface for packet capture
